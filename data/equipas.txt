@@ -1,16 +1,11 @@
-
-EQUIPA|<nome_equipa>|
-ATLETA|<num_identificacao>|<nome>|<ano_nascimento>|<posicao>|<mPontos>|<mRemates>|<mPerdas>|<mAssist>|<mFintas>|<tMinutos>
-
 EQUIPA|FC Porto|
 ATLETA|1234567|João Pereira|1998|ponta|12.5|8.2|2.1|3.4|5.6|450
 ATLETA|2345678|Miguel Santos|1995|lateral|8.3|6.7|1.8|4.2|3.1|520
 ATLETA|3456789|Rui Costa|1993|central|5.5|3.2|1.5|6.7|4.4|600
 ATLETA|4567890|André Gomes|1997|pivô|7.8|4.3|2.0|1.2|6.5|480
 ATLETA|5678901|Pedro Alves|1990|guarda-redes|0.0|0.0|0.0|0.0|0.0|650
-E/
 
-EQUIPA|Sporting CP|
+|EQUIPASporting CP|
 ATLETA|6789012|Diogo Lima|1999|ponta|10.2|7.8|2.3|2.9|4.8|420
 ATLETA|7890123|Tiago Martins|1996|lateral|9.1|5.6|2.0|5.1|3.5|500
 ATLETA|8901234|Bruno Silva|1994|central|6.8|4.1|1.2|7.2|5.0|580
