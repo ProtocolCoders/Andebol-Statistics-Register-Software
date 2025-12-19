@@ -1,0 +1,2 @@
+EQUIPA|<nome_equipa>|
+ATLETA|<num_identificacao>|<nome>|<ano_nascimento>|<posicao>|<mPontos>|<mRemates>|<mPerdas>|<mAssist>|<mFintas>|<tMinutos>

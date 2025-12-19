@@ -16,7 +16,7 @@ typedef struct {
     char designacao[100];
     Atleta* atletas;
     int numAtletas;
-    int capacidadeJogadores;
+    int capacidadeAtletas;
 } Equipa;
 
 typedef struct {
@@ -26,3 +26,7 @@ typedef struct {
 } Campeonato;
 
 const int MAX_ATLETAS = 15;
+
+void adicionarEquipa(Campeonato *campeonato);
+
+void limparBuffer();
