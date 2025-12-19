@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/andebol.h"
+#include "core.h"
+#include "stats.h"
 
 void limparBuffer() {
     int c;
