@@ -1,2 +1,2 @@
 #include "stdio.h"
-#include "stats.h"
+#include "../include/stats.h"

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "io.h"
-#include "core.h"
-#include "stats.h"
+#include "../include/io.h"
+#include "../include/core.h"
+#include "../include/stats.h"

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "core.h"
-#include "stats.h"
+#include "../include/core.h"
+#include "../include/stats.h"
 
 void limparBuffer() {
     int c;
