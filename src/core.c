@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/core.h"
-#include "../include/stats.h"
+#include "../include/andebol.h"
+
+const int MAX_ATLETAS = 15;
 
 void limparBuffer() {
     int c;
