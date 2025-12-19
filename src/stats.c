@@ -1,1 +1,2 @@
-#include "../include/andebol.h"
+#include "stdio.h"
+#include "stats.h"
