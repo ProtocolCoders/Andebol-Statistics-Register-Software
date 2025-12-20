@@ -1,16 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "../include/andebol.h"
 
 const int MAX_ATLETAS = 15;
+const int MAX_NOME_ATLETA = 100;
+const int MAX_DESIGNACAO = 100;
 
 void limparBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-Equipa *allocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capacidadeAtletas) {
+Equipa *alocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capacidadeAtletas) {
     Equipa* novaEquipa = (Equipa*) malloc(sizeof(Equipa));
 
     if (novaEquipa == NULL) {
@@ -26,6 +29,52 @@ Equipa *allocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capa
     return novaEquipa;
 }
 
+Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *posicao, float mPontos, float mRemates, float mPerdas, float mAssist, float mFintas, int tMinutos, float valia) {
+    Atleta* novoAtleta = (Atleta*) malloc(sizeof(Atleta));
+
+    if (novoAtleta == NULL) {
+        printf("\nERRO: Falha na alocação de memória para o atleta!\n");
+        return NULL;
+    }
+
+    novoAtleta->numIdentificacao = numIdentificacao;
+    strcpy(novoAtleta->nome, nome);
+    novoAtleta->anoNascimento = anoNascimento;
+    strcpy(novoAtleta->posicao, posicao);
+    novoAtleta->mPontos = mPontos;
+    novoAtleta->mRemates = mRemates;
+    novoAtleta->mPerdas = mPerdas;
+    novoAtleta->mAssist = mAssist;
+    novoAtleta->mFintas = mFintas;
+    novoAtleta->tMinutos = tMinutos;
+    novoAtleta->valia = valia;
+
+    return novoAtleta;
+}
+
+Campeonato* alocaCampeonato(int numEquipas, int capacidadeEquipas) {
+    Campeonato* novoCampeonato = (Campeonato*) malloc(sizeof(Campeonato));
+
+    if(novoCampeonato == NULL) {
+        printf("\nERRO: Falha na alocação de memória para o campeonato!\n");
+        free(novoCampeonato);
+        return NULL;
+    }
+
+    novoCampeonato->equipas = (Equipa*) malloc(capacidadeEquipas * sizeof(Equipa));
+
+    if (novoCampeonato->equipas == NULL) {
+        printf("\nERRO: Falha na alocação de memória para as equipas!\n");
+        free(novoCampeonato);
+        return NULL;
+    }
+    
+    novoCampeonato->numEquipas = numEquipas;
+    novoCampeonato->capacidadeEquipas = capacidadeEquipas;
+
+    return novoCampeonato;
+}
+
 /* Função adicionarEquipa()
  * Verifica se há capacidade no campeonato e pede os dados da nova equipa,
  * Aloca memória para a equipa e para os seus atletas e atualiza o número de equipas.
@@ -33,7 +82,7 @@ Equipa *allocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capa
 
 void adicionarEquipa(Campeonato *campeonato) {
     int capacidade, numAtletas;
-    char designacao[100];
+    char designacao[MAX_DESIGNACAO];
 
     if (campeonato->numEquipas >= campeonato->capacidadeEquipas) {
         printf("\nERRO: Capacidade máxima do campeonato atingida! Não é possível adicionar mais equipas.\n");
@@ -74,9 +123,9 @@ void adicionarEquipa(Campeonato *campeonato) {
         return;
     }
 
-    Equipa* tempEquipa = allocaEquipa(designacao, atletas, numAtletas, capacidade);
+    Equipa* tempEquipa = alocaEquipa(designacao, atletas, numAtletas, capacidade);
     if (tempEquipa == NULL) {
-        printf("\nERRO: Falha na alocação de memória para a equipa!\n");
+        // A mensagem de erro de alocação de memória está dentro da função alocaEquipa()
         free(atletas);
         return;
     }
