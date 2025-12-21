@@ -1,2 +1,11 @@
+CAMPEONATO|<nome_campeonato>|<ano_campeonato>|<numEquipas>|<capacidadeEquipas>
+
 EQUIPA|<nome_equipa>|
 ATLETA|<num_identificacao>|<nome>|<ano_nascimento>|<posicao>|<mPontos>|<mRemates>|<mPerdas>|<mAssist>|<mFintas>|<tMinutos>|<valia>
+
+Posicoes
+ponta - pon
+lateral - lat
+central - con
+pivô - piv
+guarda-redes - gua
