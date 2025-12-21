@@ -1,6 +1,6 @@
 typedef struct {
-    char nome[100];
     int numIdentificacao;
+    char nome[100];
     int anoNascimento;
     char posicao[5];
     float mPontos;
@@ -20,13 +20,25 @@ typedef struct {
 } Equipa;
 
 typedef struct {
+    char nome[100];
+    int ano;
     Equipa* equipas;
     int numEquipas;
     int capacidadeEquipas;
 } Campeonato;
 
 extern const int MAX_ATLETAS;
+extern const int MAX_NOME_ATLETA;
+extern const int MAX_DESIGNACAO;
 
 void adicionarEquipa(Campeonato *campeonato);
 
+void removerEquipa(Campeonato* campeonato);
+
 void limparBuffer();
+
+Equipa *alocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capacidadeAtletas);
+
+Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *posicao, float mPontos, float mRemates, float mPerdas, float mAssist, float mFintas, int tMinutos, float valia);
+
+Campeonato* alocaCampeonato(int numEquipas, int capacidadeEquipas);
