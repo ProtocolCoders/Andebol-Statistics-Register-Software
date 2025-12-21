@@ -75,18 +75,22 @@ Campeonato* alocaCampeonato(int numEquipas, int capacidadeEquipas) {
     return novoCampeonato;
 }
 
-/* Função adicionarEquipa()
- * Verifica se há capacidade no campeonato e pede os dados da nova equipa,
- * Aloca memória para a equipa e para os seus atletas e atualiza o número de equipas.
- */
-
 void adicionarEquipa(Campeonato *campeonato) {
     int capacidade, numAtletas;
     char designacao[MAX_DESIGNACAO];
 
     if (campeonato->numEquipas >= campeonato->capacidadeEquipas) {
-        printf("\nERRO: Capacidade máxima do campeonato atingida! Não é possível adicionar mais equipas.\n");
-        return;
+        int novaCapacidade = campeonato->capacidadeEquipas + 1;
+        Equipa* novasEquipas = realloc(campeonato->equipas, novaCapacidade * sizeof(Equipa));
+
+        if (novasEquipas == NULL) {
+            printf("\nERRO: Falha na realocação de memória para as equipas!\n");
+            return;
+        }
+        
+        campeonato->equipas = novasEquipas;
+        campeonato->capacidadeEquipas = novaCapacidade;
+        printf("\nINFO: A capacidade de equipas foi aumentada para %d.\n", novaCapacidade);
     }
 
     printf("\n--- Adicionar Nova Equipa ---\n");
@@ -141,4 +145,61 @@ void adicionarEquipa(Campeonato *campeonato) {
     */
 
     printf("\nEquipa '%s' adicionada com sucesso!\n", campeonato->equipas[campeonato->numEquipas - 1].designacao);
+}
+
+void removerEquipa(Campeonato* campeonato) {
+    char designacao[MAX_DESIGNACAO];
+    int i, index = -1;
+
+    if (campeonato->numEquipas == 0) {
+        printf("\nNenhuma equipa para remover.\n");
+        return;
+    }
+
+    printf("\n--- Remover Equipa ---\n");
+    printf("Introduza a designação da equipa a remover: ");
+    fgets(designacao, sizeof(designacao), stdin);
+    designacao[strcspn(designacao, "\n")] = '\0';
+    limparBuffer();
+
+    for (i = 0; i < campeonato->numEquipas; i++) {
+        if (strcmp(campeonato->equipas[i].designacao, designacao) == 0) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        printf("\nERRO: Equipa '%s' não encontrada.\n", designacao);
+        return;
+    }
+
+    // Libertar a memória alocada para os atletas da equipa removida
+    free(campeonato->equipas[index].atletas);
+
+    // Mover as equipas seguintes para preencher o espaço
+    for (i = index; i < campeonato->numEquipas - 1; i++) {
+        campeonato->equipas[i] = campeonato->equipas[i + 1];
+    }
+
+    campeonato->numEquipas--;
+
+    if (campeonato->numEquipas > 0) {
+        Equipa* novasEquipas = realloc(campeonato->equipas, campeonato->numEquipas * sizeof(Equipa));
+        if (novasEquipas == NULL) {
+            printf("\nERRO: Falha ao tentar diminuir a memória para as equipas!\n");
+            // Mesmo que a função realloc falhe, o ponteiro original (campeonato->equipas) ainda é válido.
+            // A capacidade permanecerá a mesma de antes.
+            return;
+        }
+        campeonato->equipas = novasEquipas;
+        campeonato->capacidadeEquipas = campeonato->numEquipas;
+    } else {
+        // Se não houver mais equipas, ocorre a libertação de memória do array de equipas
+        free(campeonato->equipas);
+        campeonato->equipas = NULL;
+        campeonato->capacidadeEquipas = 0;
+    }
+
+    printf("\nEquipa '%s' removida com sucesso!\n", designacao);
 }

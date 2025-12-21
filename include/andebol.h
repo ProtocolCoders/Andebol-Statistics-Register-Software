@@ -20,6 +20,8 @@ typedef struct {
 } Equipa;
 
 typedef struct {
+    char nome[100];
+    int ano;
     Equipa* equipas;
     int numEquipas;
     int capacidadeEquipas;
@@ -30,6 +32,8 @@ extern const int MAX_NOME_ATLETA;
 extern const int MAX_DESIGNACAO;
 
 void adicionarEquipa(Campeonato *campeonato);
+
+void removerEquipa(Campeonato* campeonato);
 
 void limparBuffer();
 
