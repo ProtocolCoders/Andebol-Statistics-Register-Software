@@ -52,7 +52,7 @@ Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *p
     return novoAtleta;
 }
 
-Campeonato* alocaCampeonato(int numEquipas, int capacidadeEquipas) {
+Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeEquipas) {
     Campeonato* novoCampeonato = (Campeonato*) malloc(sizeof(Campeonato));
 
     if(novoCampeonato == NULL) {
@@ -69,6 +69,8 @@ Campeonato* alocaCampeonato(int numEquipas, int capacidadeEquipas) {
         return NULL;
     }
     
+    strcpy(novoCampeonato->nome, nome);
+    novoCampeonato->ano = ano;
     novoCampeonato->numEquipas = numEquipas;
     novoCampeonato->capacidadeEquipas = capacidadeEquipas;
 

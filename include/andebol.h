@@ -41,4 +41,4 @@ Equipa *alocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capac
 
 Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *posicao, float mPontos, float mRemates, float mPerdas, float mAssist, float mFintas, int tMinutos, float valia);
 
-Campeonato* alocaCampeonato(int numEquipas, int capacidadeEquipas);
+Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeEquipas);
