@@ -205,3 +205,139 @@ void removerEquipa(Campeonato* campeonato) {
 
     printf("\nEquipa '%s' removida com sucesso!\n", designacao);
 }
+
+int isIdUnico(Campeonato* campeonato, int id) {
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        Equipa* equipa = &campeonato->equipas[i];
+        for (int j = 0; j < equipa->numAtletas; j++) {
+            if (equipa->atletas[j].numIdentificacao == id) {
+                return 0; // Não Único
+            }
+        }
+    }
+    return 1; // Único
+}
+
+void adicionarAtleta(Campeonato *campeonato) {
+    int numIdentificacao, anoNascimento, idValido, numEquipa;
+    char nome[MAX_NOME_ATLETA], posicao[5];
+
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        printf("\n%d - %s", i + 1, campeonato->equipas[i].designacao);
+    }
+
+    printf("A qual equipa deseja adicionar o atleta ? (Escolha o número da equipa que deseja adicionar o atleta)");
+    scanf("%d", &numEquipa);
+    limparBuffer();
+
+    if (numEquipa <= 0 || &campeonato->equipas[numEquipa - 1] == NULL) {
+        printf("\nERRO: Número de equipa inválido!\n");
+        return;
+    }
+
+    Equipa* equipa = &campeonato->equipas[numEquipa - 1];
+
+    if (equipa->numAtletas >= equipa->capacidadeAtletas) {
+        printf("\nERRO: A equipa '%s' atingiu a capacidade máxima de atletas!\n", equipa->designacao);
+        return;
+    }
+
+    printf("\n--- Adicionar Novo Atleta à Equipa '%s' ---\n", equipa->designacao);
+
+    printf("Introduza o Nome do Atleta: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0';
+    limparBuffer(); 
+
+    do {
+        idValido = 1; // Inicialmente assume que o ID é válido
+        printf("Introduza o Número de Identificação (mínimo 7 dígitos): ");
+        scanf("%d", &numIdentificacao);
+        limparBuffer();
+
+        if (numIdentificacao < 1000000) {
+            printf("ERRO: O número de identificação deve ser um número positivo com no mínimo 7 dígitos.\n");
+            idValido = 0;
+            continue;
+        }
+
+        if (!isIdUnico(campeonato, numIdentificacao)) {
+            printf("ERRO: O número de identificação %d já existe.\n", numIdentificacao);
+            idValido = 0;
+        }
+
+    } while (!idValido); // Repete o ciclo enquanto o utilizador não introduzir um Número de Identificação válido
+
+    printf("Introduza o Ano de Nascimento: ");
+    scanf("%d", &anoNascimento);
+    limparBuffer();
+
+    do {
+        printf("Introduza a Posição (ex: ponta -> pon, lateral -> lat, central -> cen, pivô -> piv, guarda-redes -> gua): ");
+        fgets(posicao, sizeof(posicao), stdin);
+        posicao[strcspn(posicao, "\n")] = '\0';
+        limparBuffer();
+
+        if (strcmp(posicao, "pon") != 0 && strcmp(posicao, "lat") != 0 && strcmp(posicao, "cen") != 0 && strcmp(posicao, "piv") != 0 && strcmp(posicao, "gua") != 0) {
+            printf("ERRO: Posição inválida!\n");
+            continue;
+        }
+    } while (strcmp(posicao, "pon") != 0 && strcmp(posicao, "lat") != 0 && strcmp(posicao, "cen") != 0 && strcmp(posicao, "piv") != 0 && strcmp(posicao, "gua") != 0);
+
+    printf("Introduza a média de Pontos: ");
+    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mPontos);
+    limparBuffer();
+
+    printf("Introduza a média de Remates: ");
+    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mRemates);
+    limparBuffer();
+
+    printf("Introduza a média de Perdas: ");
+    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mPerdas);
+    limparBuffer();
+
+    printf("Introduza a média de Assistências: ");
+    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mAssist);
+    limparBuffer();
+
+    printf("Introduza a média de Fintas: ");
+    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mFintas);
+    limparBuffer();
+
+    printf("Introduza o número de minutos jogados: ");
+    scanf("%d", &equipa->atletas[equipa->numAtletas].tMinutos);
+    limparBuffer();
+
+    printf("Calculando valia do Atleta...");
+    
+    #ifdef _WIN32
+	Sleep(3000);
+    #else
+	sleep(3)
+    #endif
+
+    /*
+        Local para a função que calcula a valia do jogador com base na sua posição
+
+        Ex: equipa->atletas[equipa->numAtletas].valia = calculaValiaAtleta(<parâmetros da função>)
+    */
+
+    Atleta* tempAtleta = alocaAtleta(numIdentificacao, nome, anoNascimento, posicao, equipa->atletas[equipa->numAtletas].mPontos, equipa->atletas[equipa->numAtletas].mRemates, equipa->atletas[equipa->numAtletas].mPerdas, equipa->atletas[equipa->numAtletas].mAssist, equipa->atletas[equipa->numAtletas].mFintas, equipa->atletas[equipa->numAtletas].tMinutos, equipa->atletas[equipa->numAtletas].valia);
+
+    if (tempAtleta == NULL) {
+        // A mensagem de erro é imprimida dentro de alocaAtleta
+        return;
+    }
+
+    // Copia os dados para o array da equipa e liberta a memória temporária
+    equipa->atletas[equipa->numAtletas] = *tempAtleta;
+    free(tempAtleta);
+
+    equipa->numAtletas++;
+
+    /*
+        Local para colocar a função que salva os dados dos atletas na equipa correspondente no ficheiro externo e os devidos tratamentos de erro da mesma
+    */
+
+    printf("\nAtleta '%s' adicionado com sucesso à equipa '%s'!\n", equipa->atletas[equipa->numAtletas - 1].nome, equipa->designacao);
+}
