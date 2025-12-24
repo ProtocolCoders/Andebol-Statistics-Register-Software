@@ -263,6 +263,28 @@ int menuB(){
 	}
 }
 
+void imprimirDadosAtleta(Campeonato* campeonato, int numIdentificacao) {
+    Atleta* atleta = encontrarAtleta(campeonato, numIdentificacao);
+    
+    if (atleta == NULL) {
+        printf("\nERRO: Atleta não encontrado!\n");
+        return;
+    }
+
+    printf("\n--- Dados do Atleta ---\n");
+    printf("1. Nome: %s\n", atleta->nome);
+    printf("2. Ano de Nascimento: %d\n", atleta->anoNascimento);
+    printf("3. Posição: %s\n", atleta->posicao);
+    printf("4. Média de Pontos: %.2f\n", atleta->mPontos);
+    printf("5. Média de Remates: %.2f\n", atleta->mRemates);
+    printf("6. Média de Perdas: %.2f\n", atleta->mPerdas);
+    printf("7. Média de Assistências: %.2f\n", atleta->mAssist);
+    printf("8. Média de Fintas: %.2f\n", atleta->mFintas);
+    printf("9. Número de Minutos Jogados: %d\n", atleta->tMinutos);
+    printf("10 Valia do Atleta: %.2f\n", atleta->valia);
+    printf("#-------------------------------------#\n");
+}
+
 int main(){
     /*if (_WIN32 == true){
 		system("cls");

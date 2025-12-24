@@ -311,9 +311,9 @@ void adicionarAtleta(Campeonato *campeonato) {
     printf("Calculando valia do Atleta...");
     
     #ifdef _WIN32
-	Sleep(3000);
+	    Sleep(3000);
     #else
-	sleep(3)
+	    sleep(3)
     #endif
 
     /*
@@ -340,4 +340,145 @@ void adicionarAtleta(Campeonato *campeonato) {
     */
 
     printf("\nAtleta '%s' adicionado com sucesso à equipa '%s'!\n", equipa->atletas[equipa->numAtletas - 1].nome, equipa->designacao);
+}
+
+Atleta* encontrarAtleta(Campeonato* campeonato, int numIdentificacao) {
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        Equipa* equipa = &campeonato->equipas[i];
+        for (int j = 0; j < equipa->numAtletas; j++) {
+            if (equipa->atletas[j].numIdentificacao == numIdentificacao) {
+                return &equipa->atletas[j];
+            }
+        }
+    }
+    return NULL;
+}
+
+void atualizarAtleta(Campeonato* campeonato) {
+    Atleta* atleta;
+    int id, opcao;
+
+    printf("Qual é o número de identificação do atleta ?: ");
+    scanf("%d", &id);
+    limparBuffer();
+
+    atleta = encontrarAtleta(campeonato, id);
+
+    if (atleta == NULL) {
+        printf("\nERRO: Atleta não encontrado!\n");
+        return;
+    }
+
+    printf("\n--- Atualizar Atleta ---\n");
+
+    imprimirDadosAtleta(campeonato, id);
+
+    printf("\nQual dado pretende atualizar ? (Selecione o número que corresponde ao campo que deseja alterar levando em consideração que a valia do atleta é atualizada automaticamente. Digite 0 para atualizar todos os campos): ");
+    scanf("%d", &opcao);
+    limparBuffer();
+
+    //No caso 0 e nos casos 3 à 9 do switch, deve ser introduzida a função de cálculo de valia do atleta antes do "break"
+
+    switch (opcao) {
+        case 0:
+            printf("\nIntroduza o novo nome do atleta: ");
+            fgets(atleta->nome, sizeof(atleta->nome), stdin);
+            atleta->nome[strcspn(atleta->nome, "\n")] = '\0';
+            limparBuffer();
+
+            printf("\nIntroduza o novo ano de nascimento do atleta: ");
+            scanf("%d", &atleta->anoNascimento);
+            limparBuffer();
+
+            printf("\nIntroduza a nova posição do atleta: ");
+            fgets(atleta->posicao, sizeof(atleta->posicao), stdin);
+            atleta->posicao[strcspn(atleta->posicao, "\n")] = '\0';
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de pontos do atleta: ");
+            scanf("%.2f", &atleta->mPontos);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de remates do atleta: ");
+            scanf("%.2f", &atleta->mRemates);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de perdas do atleta: ");
+            scanf("%.2f", &atleta->mPerdas);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de assistências do atleta: ");
+            scanf("%.2f", &atleta->mAssist);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de fintas do atleta: ");
+            scanf("%.2f", &atleta->mFintas);
+            limparBuffer();
+
+            printf("\nIntroduza o novo número de minutos jogados pelo atleta: ");
+            scanf("%d", &atleta->tMinutos);
+            limparBuffer();
+
+            break;
+        case 1:
+            printf("\nIntroduza o novo nome do atleta: ");
+            fgets(atleta->nome, sizeof(atleta->nome), stdin);
+            atleta->nome[strcspn(atleta->nome, "\n")] = '\0';
+            limparBuffer();
+            break;
+        case 2:
+            printf("\nIntroduza o novo ano de nascimento do atleta: ");
+            scanf("%d", &atleta->anoNascimento);
+            limparBuffer();
+            break;
+        case 3:
+            printf("\nIntroduza a nova posição do atleta: ");
+            fgets(atleta->posicao, sizeof(atleta->posicao), stdin);
+            atleta->posicao[strcspn(atleta->posicao, "\n")] = '\0';
+            limparBuffer();
+            break;
+        case 4:
+            printf("\nIntroduza a nova média de pontos do atleta: ");
+            scanf("%.2f", &atleta->mPontos);
+            limparBuffer();
+            break;
+        case 5:
+            printf("\nIntroduza a nova média de remates do atleta: ");
+            scanf("%.2f", &atleta->mRemates);
+            limparBuffer();
+            break;
+        case 6:
+            printf("\nIntroduza a nova média de perdas do atleta: ");
+            scanf("%.2f", &atleta->mPerdas);
+            limparBuffer();
+            break;
+        case 7:
+            printf("\nIntroduza a nova média de assistências do atleta: ");
+            scanf("%.2f", &atleta->mAssist);
+            limparBuffer();
+            break;
+        case 8:
+            printf("\nIntroduza a nova média de fintas do atleta: ");
+            scanf("%.2f", &atleta->mFintas);
+            limparBuffer();
+            break;
+        case 9:
+            printf("\nIntroduza o novo número de minutos jogados pelo atleta: ");
+            scanf("%d", &atleta->tMinutos);
+            limparBuffer();
+            break;
+        default:
+            printf("\nERRO: Opção inválida!\n");
+            return;
+    }
+
+    printf("\nAtleta '%s' atualizado com sucesso!\n", atleta->nome);
+
+    printf("\n--- Dados Atualizados do Atleta ---\n");
+    
+    imprimirDadosAtleta(campeonato, id);
+
+    /*
+        Local para colocar a função que grava os dados do novo atleta no ficheiro de equipas
+    */
 }
