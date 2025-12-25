@@ -285,23 +285,23 @@ void adicionarAtleta(Campeonato *campeonato) {
     } while (strcmp(posicao, "pon") != 0 && strcmp(posicao, "lat") != 0 && strcmp(posicao, "cen") != 0 && strcmp(posicao, "piv") != 0 && strcmp(posicao, "gua") != 0);
 
     printf("Introduza a média de Pontos: ");
-    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mPontos);
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mPontos);
     limparBuffer();
 
     printf("Introduza a média de Remates: ");
-    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mRemates);
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mRemates);
     limparBuffer();
 
     printf("Introduza a média de Perdas: ");
-    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mPerdas);
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mPerdas);
     limparBuffer();
 
     printf("Introduza a média de Assistências: ");
-    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mAssist);
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mAssist);
     limparBuffer();
 
     printf("Introduza a média de Fintas: ");
-    scanf("%.2f", &equipa->atletas[equipa->numAtletas].mFintas);
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mFintas);
     limparBuffer();
 
     printf("Introduza o número de minutos jogados: ");
@@ -396,23 +396,23 @@ void atualizarAtleta(Campeonato* campeonato) {
             limparBuffer();
 
             printf("\nIntroduza a nova média de pontos do atleta: ");
-            scanf("%.2f", &atleta->mPontos);
+            scanf("%f", &atleta->mPontos);
             limparBuffer();
 
             printf("\nIntroduza a nova média de remates do atleta: ");
-            scanf("%.2f", &atleta->mRemates);
+            scanf("%f", &atleta->mRemates);
             limparBuffer();
 
             printf("\nIntroduza a nova média de perdas do atleta: ");
-            scanf("%.2f", &atleta->mPerdas);
+            scanf("%f", &atleta->mPerdas);
             limparBuffer();
 
             printf("\nIntroduza a nova média de assistências do atleta: ");
-            scanf("%.2f", &atleta->mAssist);
+            scanf("%f", &atleta->mAssist);
             limparBuffer();
 
             printf("\nIntroduza a nova média de fintas do atleta: ");
-            scanf("%.2f", &atleta->mFintas);
+            scanf("%f", &atleta->mFintas);
             limparBuffer();
 
             printf("\nIntroduza o novo número de minutos jogados pelo atleta: ");
@@ -439,27 +439,27 @@ void atualizarAtleta(Campeonato* campeonato) {
             break;
         case 4:
             printf("\nIntroduza a nova média de pontos do atleta: ");
-            scanf("%.2f", &atleta->mPontos);
+            scanf("%f", &atleta->mPontos);
             limparBuffer();
             break;
         case 5:
             printf("\nIntroduza a nova média de remates do atleta: ");
-            scanf("%.2f", &atleta->mRemates);
+            scanf("%f", &atleta->mRemates);
             limparBuffer();
             break;
         case 6:
             printf("\nIntroduza a nova média de perdas do atleta: ");
-            scanf("%.2f", &atleta->mPerdas);
+            scanf("%f", &atleta->mPerdas);
             limparBuffer();
             break;
         case 7:
             printf("\nIntroduza a nova média de assistências do atleta: ");
-            scanf("%.2f", &atleta->mAssist);
+            scanf("%f", &atleta->mAssist);
             limparBuffer();
             break;
         case 8:
             printf("\nIntroduza a nova média de fintas do atleta: ");
-            scanf("%.2f", &atleta->mFintas);
+            scanf("%f", &atleta->mFintas);
             limparBuffer();
             break;
         case 9:
