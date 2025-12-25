@@ -42,3 +42,11 @@ Equipa *alocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capac
 Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *posicao, float mPontos, float mRemates, float mPerdas, float mAssist, float mFintas, int tMinutos, float valia);
 
 Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeEquipas);
+
+int removerAtleta(Equipa *equipa, int numId);
+
+void removerTodosAtletas(Equipa *equipa);
+
+int validarNumId(Campeonato *camp, int numId);
+
+void libertarMemoria(Campeonato *camp);

@@ -205,3 +205,63 @@ void removerEquipa(Campeonato* campeonato) {
 
     printf("\nEquipa '%s' removida com sucesso!\n", designacao);
 }
+/**
+ * Remove um atleta específico de uma equipa com base no numIdentificacao.
+ * Retorna 1 se removido com sucesso, 0 se não encontrado.
+ */
+int removerAtleta(Equipa *equipa, int numId) {
+    if (equipa == NULL || equipa->numAtletas == 0) return 0;
+
+    for (int i = 0; i < equipa->numAtletas; i++) {
+        if (equipa->atletas[i].numIdentificacao == numId) {
+            // Shift dos atletas seguintes
+            for (int j = i; j < equipa->numAtletas - 1; j++) {
+                equipa->atletas[j] = equipa->atletas[j + 1];
+            }
+            equipa->numAtletas--;
+            equipa->atletas = realloc(equipa->atletas, equipa->numAtletas * sizeof(Atleta));
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/**
+ * Remove todos os atletas de uma equipa.
+ */
+void removerTodosAtletas(Equipa *equipa) {
+    if (equipa == NULL) return;
+    free(equipa->atletas);
+    equipa->atletas = NULL;
+    equipa->numAtletas = 0;
+}
+
+/**
+ * Valida se um numId tem 7 dígitos e é único em todas as equipas do campeonato.
+ * Retorna 1 se válido, 0 se inválido.
+ */
+int validarNumId(Campeonato *camp, int numId) {
+    if (numId < 1000000 || numId > 9999999) return 0;
+
+    for (int i = 0; i < camp->numEquipas; i++) {
+        Equipa *eq = &camp->equipas[i];
+        for (int j = 0; j < eq->numAtletas; j++) {
+            if (eq->atletas[j].numIdentificacao == numId) return 0;
+        }
+    }
+    return 1;
+}
+
+/**
+ * Liberta toda a memória alocada para o campeonato e suas equipas.
+ */
+void libertarMemoria(Campeonato *camp) {
+    if (camp == NULL) return;
+
+    for (int i = 0; i < camp->numEquipas; i++) {
+        free(camp->equipas[i].atletas);
+    }
+    free(camp->equipas);
+    camp->equipas = NULL;
+    camp->numEquipas = 0;
+}
