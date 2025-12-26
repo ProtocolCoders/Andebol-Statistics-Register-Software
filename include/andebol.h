@@ -43,6 +43,4 @@ Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *p
 
 Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeEquipas);
 
-int isIdUnico(Campeonato* campeonato, int id);
-
 void adicionarAtleta(Campeonato *campeonato);
