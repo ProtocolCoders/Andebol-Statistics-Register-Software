@@ -204,36 +204,135 @@ void removerEquipa(Campeonato* campeonato) {
     }
 
     printf("\nEquipa '%s' removida com sucesso!\n", designacao);
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
 }
+
 /**
  * Remove um atleta específico de uma equipa com base no numIdentificacao.
- * Retorna 1 se removido com sucesso, 0 se não encontrado.
  */
-int removerAtleta(Equipa *equipa, int numId) {
-    if (equipa == NULL || equipa->numAtletas == 0) return 0;
+void removerAtleta(Campeonato *campeonato) {
+    int numId, equipaIndex = -1, atletaIndex = -1;
+    char confirmacao;
 
-    for (int i = 0; i < equipa->numAtletas; i++) {
-        if (equipa->atletas[i].numIdentificacao == numId) {
-            // Shift dos atletas seguintes
-            for (int j = i; j < equipa->numAtletas - 1; j++) {
-                equipa->atletas[j] = equipa->atletas[j + 1];
+    if (campeonato == NULL || campeonato->numEquipas == 0) {
+        printf("\nNenhuma equipa registada no campeonato.\n");
+        return;
+    }
+
+    printf("\n--- Remover Atleta ---\n");
+    printf("Introduza o Número de Identificação do atleta a remover: ");
+    scanf("%d", &numId);
+    limparBuffer();
+
+    // Encontrar o atleta e a equipa a que pertence
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        for (int j = 0; j < campeonato->equipas[i].numAtletas; j++) {
+            if (campeonato->equipas[i].atletas[j].numIdentificacao == numId) {
+                equipaIndex = i;
+                atletaIndex = j;
+                break;
             }
-            equipa->numAtletas--;
-            equipa->atletas = realloc(equipa->atletas, equipa->numAtletas * sizeof(Atleta));
-            return 1;
+        }
+        if (equipaIndex != -1) {
+            break;
         }
     }
-    return 0;
+
+    if (atletaIndex == -1) {
+        printf("\nERRO: Atleta com o número de identificação %d não encontrado.\n", numId);
+        return;
+    }
+
+    printf("\nAtleta encontrado: %s da equipa %s\n", campeonato->equipas[equipaIndex].atletas[atletaIndex].nome, campeonato->equipas[equipaIndex].designacao);
+    printf("Tem a certeza que quer remover este atleta? (S/N): ");
+    scanf("%c", &confirmacao);
+    limparBuffer();
+
+    if (confirmacao == 'S' || confirmacao == 's') {
+        Equipa *equipa = &campeonato->equipas[equipaIndex];
+        char nomeAtleta[MAX_NOME_ATLETA];
+        strcpy(nomeAtleta, equipa->atletas[atletaIndex].nome);
+
+        // Mover os atletas seguintes para preencher o espaço
+        for (int i = atletaIndex; i < equipa->numAtletas - 1; i++) {
+            equipa->atletas[i] = equipa->atletas[i + 1];
+        }
+        equipa->numAtletas--;
+
+        // Realocar a memória para o array de atletas
+        if (equipa->numAtletas > 0) {
+            Atleta* novosAtletas = realloc(equipa->atletas, equipa->numAtletas * sizeof(Atleta));
+            if (novosAtletas == NULL) {
+                printf("\nERRO: Falha ao tentar diminuir a memória para os atletas!\n");
+            } else {
+                equipa->atletas = novosAtletas;
+            }
+        } else {
+            free(equipa->atletas);
+            equipa->atletas = NULL;
+        }
+
+        printf("\nAtleta '%s' removido com sucesso!\n", nomeAtleta);
+    } else {
+        printf("\nOperação de remoção cancelada.\n");
+    }
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
 }
 
 /**
  * Remove todos os atletas de uma equipa.
  */
-void removerTodosAtletas(Equipa *equipa) {
-    if (equipa == NULL) return;
-    free(equipa->atletas);
-    equipa->atletas = NULL;
-    equipa->numAtletas = 0;
+void removerTodosAtletas(Campeonato* campeonato) {
+    int numEquipa;
+    char confirmacao;
+
+    if (campeonato == NULL || campeonato->numEquipas == 0) {
+        printf("\nNenhuma equipa registada para remover atletas.\n");
+        return;
+    }
+
+    printf("\n--- Remover Todos os Atletas de uma Equipa ---\n");
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        printf("%d - %s\n", i + 1, campeonato->equipas[i].designacao);
+    }
+    printf("Escolha o número da equipa da qual deseja remover todos os atletas: ");
+    scanf("%d", &numEquipa);
+    limparBuffer();
+
+    if (numEquipa <= 0 || numEquipa > campeonato->numEquipas) {
+        printf("\nERRO: Número de equipa inválido!\n");
+        return;
+    }
+
+    Equipa* equipa = &campeonato->equipas[numEquipa - 1];
+
+    if (equipa->numAtletas == 0) {
+        printf("\nA equipa '%s' já não tem atletas.\n", equipa->designacao);
+        return;
+    }
+
+    printf("\nTem a certeza que quer remover todos os %d atletas da equipa '%s'? (S/N): ", equipa->numAtletas, equipa->designacao);
+    scanf("%c", &confirmacao);
+    limparBuffer();
+
+    if (confirmacao == 'S' || confirmacao == 's') {
+        free(equipa->atletas);
+        equipa->atletas = NULL;
+        equipa->numAtletas = 0;
+        printf("\nTodos os atletas da equipa '%s' foram removidos com sucesso!\n", equipa->designacao);
+    } else {
+        printf("\nOperação de remoção cancelada.\n");
+    }
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
 }
 
 /**
