@@ -1,6 +1,6 @@
 CAMPEONATO|<nome_campeonato>|<ano_campeonato>|<numEquipas>|<capacidadeEquipas>
 
-EQUIPA|<nome_equipa>|
+EQUIPA|<nome_equipa>|<numAtletas>
 ATLETA|<num_identificacao>|<nome>|<ano_nascimento>|<posicao>|<mPontos>|<mRemates>|<mPerdas>|<mAssist>|<mFintas>|<tMinutos>|<valia>
 
 Posicoes

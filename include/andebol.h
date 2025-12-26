@@ -52,3 +52,7 @@ int validarNumId(Campeonato *camp, int numId);
 void libertarMemoria(Campeonato *camp);
 
 void ApagarDados(Campeonato *camp);
+
+void adicionarAtleta(Campeonato *campeonato);
+
+void imprimirDadosAtleta(Campeonato* campeonato, int numIdentificacao);
