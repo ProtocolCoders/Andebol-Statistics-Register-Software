@@ -43,6 +43,10 @@ Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *p
 
 Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeEquipas);
 
+void adicionarAtleta(Campeonato *campeonato);
+
+void imprimirDadosAtleta(Campeonato* campeonato, int numIdentificacao);
+
 /* Módulo de Estatísticas */
 float calcularValiaAtleta(Atleta *a);
 void atualizarTodasValias(Campeonato *camp);
