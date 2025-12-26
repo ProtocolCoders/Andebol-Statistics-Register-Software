@@ -2,7 +2,7 @@ typedef struct {
     int numIdentificacao;
     char nome[100];
     int anoNascimento;
-    char posicao[20];
+    char posicao[5];
     float mPontos;
     float mRemates;
     float mPerdas;
