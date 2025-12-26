@@ -50,3 +50,5 @@ void removerTodosAtletas(Equipa *equipa);
 int validarNumId(Campeonato *camp, int numId);
 
 void libertarMemoria(Campeonato *camp);
+
+void ApagarDados(Campeonato *camp);
