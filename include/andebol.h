@@ -42,3 +42,5 @@ Equipa *alocaEquipa(char *designacao, Atleta *atletas, int numAtletas, int capac
 Atleta* alocaAtleta(int numIdentificacao, char *nome, int anoNascimento, char *posicao, float mPontos, float mRemates, float mPerdas, float mAssist, float mFintas, int tMinutos, float valia);
 
 Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeEquipas);
+
+void adicionarAtleta(Campeonato *campeonato);
