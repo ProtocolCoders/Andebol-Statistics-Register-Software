@@ -8,15 +8,19 @@
 // Valia dos Atletas baseada nas posições e estatísticas
 float calcularValiaAtleta(Atleta *a) {
     // Guarda-Redes tem valia 0
-    if (strcasecmp(a->posicao, "GuardaRedes") == 0) return 0.0f;
+    if (strcasecmp(a->posicao, "gua") == 0) return 0.0f;
     // Restantes posições
-    if (strcasecmp(a->posicao, "Ponta") == 0) {
+    /* ponta */
+    if (strcasecmp(a->posicao, "pon") == 0) {
         return 5.0f * a->mPontos + 4.0f * a->mRemates + 2.0f * a->mAssist - 3.0f * a->mPerdas;
-    } else if (strcasecmp(a->posicao, "Lateral") == 0) {
+        /* lateral */
+    } else if (strcasecmp(a->posicao, "lat") == 0) {
         return 3.0f * a->mPontos + 2.0f * a->mRemates + 4.0f * a->mAssist - 3.0f * a->mPerdas;
-    } else if (strcasecmp(a->posicao, "Central") == 0) {
+        /* central */
+    } else if (strcasecmp(a->posicao, "cen") == 0) {
         return 2.0f * a->mPontos + 5.0f * a->mAssist + 4.0f * a->mFintas - 2.0f * a->mPerdas;
-    } else if (strcasecmp(a->posicao, "Pivo") == 0) {
+        /* pivo */
+    } else if (strcasecmp(a->posicao, "piv") == 0) {
         return 2.0f * a->mPontos + 1.0f * a->mRemates + 5.0f * a->mFintas - 2.0f * a->mPerdas;
     }
 }
