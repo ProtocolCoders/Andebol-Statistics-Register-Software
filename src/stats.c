@@ -27,26 +27,34 @@ float calcularValiaAtleta(Atleta *a) {
 
 // Atualiza a valia de todos os atletas no campeonato
 void atualizarTodasValias(Campeonato *camp) {
-    if (camp == NULL) return;
+    if (camp == NULL) {
+        printf("Erro: Campeonato inválido!\n");
+        return;
+    }
+    if (camp->numEquipas == 0) {
+        printf("Aviso: Não há equipas no campeonato.\n");
+        return;
+    }
+    
     for (int i = 0; i < camp->numEquipas; i++) {
         Equipa *e = &camp->equipas[i];
+        if (e->atletas == NULL) continue;
         for (int j = 0; j < e->numAtletas; j++) {
             e->atletas[j].valia = calcularValiaAtleta(&e->atletas[j]);
         }
     }
+    printf("\nValia dos atletas atualizada com sucesso !\n");
 }
 
 //Calcula a valia total de uma equipa através da soma das valias dos seus atletas
 float calcularValiaEquipa(Equipa *e) {
-    if (e == NULL) return 0.0f;
+    if (e == NULL || e->numAtletas == 0) return 0.0f;
     float soma = 0.0f;
     for (int i = 0; i < e->numAtletas; i++) soma += e->atletas[i].valia;
     return soma;
 }
 
-
-//Ordena atletas por:
-/* valia decrescente */
+//Ordena atletas por ordem decrescente quando desc = 1 e crescente quando desc = 0 
 void ordenarAtletasPorValia(Equipa *e, int desc) {
     if (e == NULL || e->numAtletas <= 1) return;
     int n = e->numAtletas;
@@ -67,7 +75,7 @@ void ordenarAtletasPorValia(Equipa *e, int desc) {
     }
 }
 
-/* nome (alfabeticamente) */
+//Ordena atletas pelo nome (alfabeticamente)
 void ordenarAtletasPorNome(Equipa *e) {
     if (e == NULL || e->numAtletas <= 1) return;
     int n = e->numAtletas;
@@ -161,7 +169,7 @@ Equipa* encontrarEquipaMenosValiosa(Campeonato *camp) {
 // Encontra o melhor Atleta por posição (que tenha mais de 100 minutos de jogo)
 void encontrarMelhorAtletaPorPosicao(Campeonato *camp) {
     if (camp == NULL) return;
-    const char *posicoes[] = {"Ponta", "Lateral", "Central", "Pivo", "Guarda-Redes"};
+    const char *posicoes[] = {"pon", "lat", "cen", "piv", "gua"};
     const int np = sizeof(posicoes) / sizeof(posicoes[0]);
 
     printf("\n--- Melhor Atleta por Posição (min > 100 min) ---\n");
@@ -184,5 +192,36 @@ void encontrarMelhorAtletaPorPosicao(Campeonato *camp) {
         } else {
             printf("%s: (não existe atleta com >100 min)\n", posicoes[p]);
         }
+    }
+}
+
+// Pesquisa atletas nascidos em um determinado ano
+void pesquisarAtletasPorAnoExato(Campeonato *camp) {
+    int ano;
+    int encontrados = 0;
+
+    if (camp == NULL) {
+        printf("Erro: Campeonato inválido!\n");
+        return;
+    }
+
+    printf("\nIntroduza o ano de nascimento a pesquisar: ");
+    scanf("%d", &ano);
+    limparBuffer();
+
+    printf("\n--- Pesquisa Atletas Nascidos em %d ---\n", ano);
+    for (int i = 0; i < camp->numEquipas; i++) {
+        Equipa *e = &camp->equipas[i];
+        for (int j = 0; j < e->numAtletas; j++) {
+            Atleta *atleta = &e->atletas[j];
+            if (atleta->anoNascimento == ano) {
+                printf("[%s] %d | %s | Ano: %d | Posição: %s\n", e->designacao, atleta->numIdentificacao, atleta->nome, atleta->anoNascimento, atleta->posicao);
+                encontrados++;
+            }
+        }
+    }
+
+    if (encontrados == 0) {
+        printf("Nenhum atleta encontrado nascido no ano de %d.\n", ano);
     }
 }
