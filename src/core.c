@@ -364,3 +364,46 @@ void libertarMemoria(Campeonato *camp) {
     camp->equipas = NULL;
     camp->numEquipas = 0;
 }
+
+/*
+* Apaga todos os dados do campeonato incluindo equipas e atletas
+*/
+void ApagarDados(Campeonato *camp) {
+    char confirmacao;
+
+    if (camp == NULL) {
+        return;
+    }
+
+    printf("\n--- Apagar Todo o Registo ---\n");
+    printf("Tem a certeza que quer apagar todo o registo do campeonato?\n");
+    printf("Esta ação é irreversível e irá limpar todos os dados de equipas e atletas.\n");
+    printf("Confirma? (S/N): ");
+    scanf("%c", &confirmacao);
+    limparBuffer();
+
+    if (confirmacao == 'S' || confirmacao == 's') {
+        if (camp->equipas != NULL) {
+            for (int i = 0; i < camp->numEquipas; i++) {
+                if (camp->equipas[i].atletas != NULL) {
+                    free(camp->equipas[i].atletas);
+                }
+            }
+            free(camp->equipas);
+        }
+        
+        camp->equipas = NULL;
+        camp->numEquipas = 0;
+        camp->capacidadeEquipas = 0;
+        strcpy(camp->nome, "");
+        camp->ano = 0;
+
+        printf("\nToda a memória foi libertada e os dados foram apagados com sucesso.\n");
+    } else {
+        printf("\nOperação de remoção cancelada.\n");
+    }
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
+}
