@@ -271,11 +271,11 @@ void adicionarAtleta(Campeonato *campeonato) {
         posicao[strcspn(posicao, "\n")] = '\0';
         limparBuffer();
 
-        if (strcmp(posicao, "pon") != 0 && strcmp(posicao, "lat") != 0 && strcmp(posicao, "cen") != 0 && strcmp(posicao, "piv") != 0 && strcmp(posicao, "gua") != 0) {
+        if (strcasecmp(posicao, "pon") != 0 && strcasecmp(posicao, "lat") != 0 && strcasecmp(posicao, "cen") != 0 && strcasecmp(posicao, "piv") != 0 && strcasecmp(posicao, "gua") != 0) {
             printf("ERRO: Posição inválida!\n");
             continue;
         }
-    } while (strcmp(posicao, "pon") != 0 && strcmp(posicao, "lat") != 0 && strcmp(posicao, "cen") != 0 && strcmp(posicao, "piv") != 0 && strcmp(posicao, "gua") != 0);
+    } while (strcasecmp(posicao, "pon") != 0 && strcasecmp(posicao, "lat") != 0 && strcasecmp(posicao, "cen") != 0 && strcasecmp(posicao, "piv") != 0 && strcasecmp(posicao, "gua") != 0);
 
     printf("Introduza a média de Pontos: ");
     scanf("%f", &equipa->atletas[equipa->numAtletas].mPontos);
