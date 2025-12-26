@@ -206,18 +206,6 @@ void removerEquipa(Campeonato* campeonato) {
     printf("\nEquipa '%s' removida com sucesso!\n", designacao);
 }
 
-int isIdUnico(Campeonato* campeonato, int id) {
-    for (int i = 0; i < campeonato->numEquipas; i++) {
-        Equipa* equipa = &campeonato->equipas[i];
-        for (int j = 0; j < equipa->numAtletas; j++) {
-            if (equipa->atletas[j].numIdentificacao == id) {
-                return 0; // Não Único
-            }
-        }
-    }
-    return 1; // Único
-}
-
 void adicionarAtleta(Campeonato *campeonato) {
     int numIdentificacao, anoNascimento, idValido, numEquipa;
     char nome[MAX_NOME_ATLETA], posicao[5];
@@ -261,7 +249,7 @@ void adicionarAtleta(Campeonato *campeonato) {
             continue;
         }
 
-        if (!isIdUnico(campeonato, numIdentificacao)) {
+        if (!validarNumId(campeonato, numIdentificacao)) {
             printf("ERRO: O número de identificação %d já existe.\n", numIdentificacao);
             idValido = 0;
         }
