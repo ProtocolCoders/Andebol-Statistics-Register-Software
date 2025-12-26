@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
+#include <windows.h> //Sleep
+#include <unistd.h> //sleep
 #include "../include/andebol.h"
 
 const int MAX_ATLETAS = 15;
@@ -204,4 +205,471 @@ void removerEquipa(Campeonato* campeonato) {
     }
 
     printf("\nEquipa '%s' removida com sucesso!\n", designacao);
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
+}
+
+void adicionarAtleta(Campeonato *campeonato) {
+    int numIdentificacao, anoNascimento, idValido, numEquipa;
+    char nome[MAX_NOME_ATLETA], posicao[5];
+
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        printf("\n%d - %s", i + 1, campeonato->equipas[i].designacao);
+    }
+
+    printf("A qual equipa deseja adicionar o atleta ? (Escolha o número da equipa que deseja adicionar o atleta)");
+    scanf("%d", &numEquipa);
+    limparBuffer();
+
+    if (numEquipa <= 0 || &campeonato->equipas[numEquipa - 1] == NULL) {
+        printf("\nERRO: Número de equipa inválido!\n");
+        return;
+    }
+
+    Equipa* equipa = &campeonato->equipas[numEquipa - 1];
+
+    if (equipa->numAtletas >= equipa->capacidadeAtletas) {
+        printf("\nERRO: A equipa '%s' atingiu a capacidade máxima de atletas!\n", equipa->designacao);
+        return;
+    }
+
+    printf("\n--- Adicionar Novo Atleta à Equipa '%s' ---\n", equipa->designacao);
+
+    printf("Introduza o Nome do Atleta: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0';
+    limparBuffer(); 
+
+    do {
+        idValido = 1; // Inicialmente assume que o ID é válido
+        printf("Introduza o Número de Identificação (mínimo 7 dígitos): ");
+        scanf("%d", &numIdentificacao);
+        limparBuffer();
+
+        if (numIdentificacao < 1000000) {
+            printf("ERRO: O número de identificação deve ser um número positivo com no mínimo 7 dígitos.\n");
+            idValido = 0;
+            continue;
+        }
+
+        if (!validarNumId(campeonato, numIdentificacao)) {
+            printf("ERRO: O número de identificação %d já existe.\n", numIdentificacao);
+            idValido = 0;
+        }
+
+    } while (!idValido); // Repete o ciclo enquanto o utilizador não introduzir um Número de Identificação válido
+
+    printf("Introduza o Ano de Nascimento: ");
+    scanf("%d", &anoNascimento);
+    limparBuffer();
+
+    do {
+        printf("Introduza a Posição (ex: ponta -> pon, lateral -> lat, central -> cen, pivô -> piv, guarda-redes -> gua): ");
+        fgets(posicao, sizeof(posicao), stdin);
+        posicao[strcspn(posicao, "\n")] = '\0';
+        limparBuffer();
+
+        if (strcmp(posicao, "pon") != 0 && strcmp(posicao, "lat") != 0 && strcmp(posicao, "cen") != 0 && strcmp(posicao, "piv") != 0 && strcmp(posicao, "gua") != 0) {
+            printf("ERRO: Posição inválida!\n");
+            continue;
+        }
+    } while (strcmp(posicao, "pon") != 0 && strcmp(posicao, "lat") != 0 && strcmp(posicao, "cen") != 0 && strcmp(posicao, "piv") != 0 && strcmp(posicao, "gua") != 0);
+
+    printf("Introduza a média de Pontos: ");
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mPontos);
+    limparBuffer();
+
+    printf("Introduza a média de Remates: ");
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mRemates);
+    limparBuffer();
+
+    printf("Introduza a média de Perdas: ");
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mPerdas);
+    limparBuffer();
+
+    printf("Introduza a média de Assistências: ");
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mAssist);
+    limparBuffer();
+
+    printf("Introduza a média de Fintas: ");
+    scanf("%f", &equipa->atletas[equipa->numAtletas].mFintas);
+    limparBuffer();
+
+    printf("Introduza o número de minutos jogados: ");
+    scanf("%d", &equipa->atletas[equipa->numAtletas].tMinutos);
+    limparBuffer();
+
+    printf("Calculando valia do Atleta...");
+    
+    #ifdef _WIN32
+	    Sleep(3000);
+    #else
+	    sleep(3);
+    #endif
+
+    /*
+        Local para a função que calcula a valia do jogador com base na sua posição
+
+        Ex: equipa->atletas[equipa->numAtletas].valia = calculaValiaAtleta(<parâmetros da função>)
+    */
+
+    Atleta* tempAtleta = alocaAtleta(numIdentificacao, nome, anoNascimento, posicao, equipa->atletas[equipa->numAtletas].mPontos, equipa->atletas[equipa->numAtletas].mRemates, equipa->atletas[equipa->numAtletas].mPerdas, equipa->atletas[equipa->numAtletas].mAssist, equipa->atletas[equipa->numAtletas].mFintas, equipa->atletas[equipa->numAtletas].tMinutos, equipa->atletas[equipa->numAtletas].valia);
+
+    if (tempAtleta == NULL) {
+        // A mensagem de erro é imprimida dentro de alocaAtleta
+        return;
+    }
+
+    // Copia os dados para o array da equipa e liberta a memória temporária
+    equipa->atletas[equipa->numAtletas] = *tempAtleta;
+    free(tempAtleta);
+
+    equipa->numAtletas++;
+
+    /*
+        Local para colocar a função que salva os dados dos atletas na equipa correspondente no ficheiro externo e os devidos tratamentos de erro da mesma
+    */
+
+    printf("\nAtleta '%s' adicionado com sucesso à equipa '%s'!\n", equipa->atletas[equipa->numAtletas - 1].nome, equipa->designacao);
+}
+
+Atleta* encontrarAtleta(Campeonato* campeonato, int numIdentificacao) {
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        Equipa* equipa = &campeonato->equipas[i];
+        for (int j = 0; j < equipa->numAtletas; j++) {
+            if (equipa->atletas[j].numIdentificacao == numIdentificacao) {
+                return &equipa->atletas[j];
+            }
+        }
+    }
+    return NULL;
+}
+
+void atualizarAtleta(Campeonato* campeonato) {
+    Atleta* atleta;
+    int id, opcao;
+
+    printf("Qual é o número de identificação do atleta ?: ");
+    scanf("%d", &id);
+    limparBuffer();
+
+    atleta = encontrarAtleta(campeonato, id);
+
+    if (atleta == NULL) {
+        printf("\nERRO: Atleta não encontrado!\n");
+        return;
+    }
+
+    printf("\n--- Atualizar Atleta ---\n");
+
+    imprimirDadosAtleta(campeonato, id);
+
+    printf("\nQual dado pretende atualizar ? (Selecione o número que corresponde ao campo que deseja alterar levando em consideração que a valia do atleta é atualizada automaticamente. Digite 0 para atualizar todos os campos): ");
+    scanf("%d", &opcao);
+    limparBuffer();
+
+    //No caso 0 e nos casos 3 à 9 do switch, deve ser introduzida a função de cálculo de valia do atleta antes do "break"
+
+    switch (opcao) {
+        case 0:
+            printf("\nIntroduza o novo nome do atleta: ");
+            fgets(atleta->nome, sizeof(atleta->nome), stdin);
+            atleta->nome[strcspn(atleta->nome, "\n")] = '\0';
+            limparBuffer();
+
+            printf("\nIntroduza o novo ano de nascimento do atleta: ");
+            scanf("%d", &atleta->anoNascimento);
+            limparBuffer();
+
+            printf("\nIntroduza a nova posição do atleta: ");
+            fgets(atleta->posicao, sizeof(atleta->posicao), stdin);
+            atleta->posicao[strcspn(atleta->posicao, "\n")] = '\0';
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de pontos do atleta: ");
+            scanf("%f", &atleta->mPontos);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de remates do atleta: ");
+            scanf("%f", &atleta->mRemates);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de perdas do atleta: ");
+            scanf("%f", &atleta->mPerdas);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de assistências do atleta: ");
+            scanf("%f", &atleta->mAssist);
+            limparBuffer();
+
+            printf("\nIntroduza a nova média de fintas do atleta: ");
+            scanf("%f", &atleta->mFintas);
+            limparBuffer();
+
+            printf("\nIntroduza o novo número de minutos jogados pelo atleta: ");
+            scanf("%d", &atleta->tMinutos);
+            limparBuffer();
+
+            break;
+        case 1:
+            printf("\nIntroduza o novo nome do atleta: ");
+            fgets(atleta->nome, sizeof(atleta->nome), stdin);
+            atleta->nome[strcspn(atleta->nome, "\n")] = '\0';
+            limparBuffer();
+            break;
+        case 2:
+            printf("\nIntroduza o novo ano de nascimento do atleta: ");
+            scanf("%d", &atleta->anoNascimento);
+            limparBuffer();
+            break;
+        case 3:
+            printf("\nIntroduza a nova posição do atleta: ");
+            fgets(atleta->posicao, sizeof(atleta->posicao), stdin);
+            atleta->posicao[strcspn(atleta->posicao, "\n")] = '\0';
+            limparBuffer();
+            break;
+        case 4:
+            printf("\nIntroduza a nova média de pontos do atleta: ");
+            scanf("%f", &atleta->mPontos);
+            limparBuffer();
+            break;
+        case 5:
+            printf("\nIntroduza a nova média de remates do atleta: ");
+            scanf("%f", &atleta->mRemates);
+            limparBuffer();
+            break;
+        case 6:
+            printf("\nIntroduza a nova média de perdas do atleta: ");
+            scanf("%f", &atleta->mPerdas);
+            limparBuffer();
+            break;
+        case 7:
+            printf("\nIntroduza a nova média de assistências do atleta: ");
+            scanf("%f", &atleta->mAssist);
+            limparBuffer();
+            break;
+        case 8:
+            printf("\nIntroduza a nova média de fintas do atleta: ");
+            scanf("%f", &atleta->mFintas);
+            limparBuffer();
+            break;
+        case 9:
+            printf("\nIntroduza o novo número de minutos jogados pelo atleta: ");
+            scanf("%d", &atleta->tMinutos);
+            limparBuffer();
+            break;
+        default:
+            printf("\nERRO: Opção inválida!\n");
+            return;
+    }
+
+    printf("\nAtleta '%s' atualizado com sucesso!\n", atleta->nome);
+
+    printf("\n--- Dados Atualizados do Atleta ---\n");
+    
+    imprimirDadosAtleta(campeonato, id);
+
+    /*
+        Local para colocar a função que grava os dados do novo atleta no ficheiro de equipas
+    */
+}
+
+/**
+ * Remove um atleta específico de uma equipa com base no numIdentificacao.
+ */
+void removerAtleta(Campeonato *campeonato) {
+    int numId, equipaIndex = -1, atletaIndex = -1;
+    char confirmacao;
+
+    if (campeonato == NULL || campeonato->numEquipas == 0) {
+        printf("\nNenhuma equipa registada no campeonato.\n");
+        return;
+    }
+
+    printf("\n--- Remover Atleta ---\n");
+    printf("Introduza o Número de Identificação do atleta a remover: ");
+    scanf("%d", &numId);
+    limparBuffer();
+
+    // Encontrar o atleta e a equipa a que pertence
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        for (int j = 0; j < campeonato->equipas[i].numAtletas; j++) {
+            if (campeonato->equipas[i].atletas[j].numIdentificacao == numId) {
+                equipaIndex = i;
+                atletaIndex = j;
+                break;
+            }
+        }
+        if (equipaIndex != -1) {
+            break;
+        }
+    }
+
+    if (atletaIndex == -1) {
+        printf("\nERRO: Atleta com o número de identificação %d não encontrado.\n", numId);
+        return;
+    }
+
+    printf("\nAtleta encontrado: %s da equipa %s\n", campeonato->equipas[equipaIndex].atletas[atletaIndex].nome, campeonato->equipas[equipaIndex].designacao);
+    printf("Tem a certeza que quer remover este atleta? (S/N): ");
+    scanf("%c", &confirmacao);
+    limparBuffer();
+
+    if (confirmacao == 'S' || confirmacao == 's') {
+        Equipa *equipa = &campeonato->equipas[equipaIndex];
+        char nomeAtleta[MAX_NOME_ATLETA];
+        strcpy(nomeAtleta, equipa->atletas[atletaIndex].nome);
+
+        // Mover os atletas seguintes para preencher o espaço
+        for (int i = atletaIndex; i < equipa->numAtletas - 1; i++) {
+            equipa->atletas[i] = equipa->atletas[i + 1];
+        }
+        equipa->numAtletas--;
+
+        // Realocar a memória para o array de atletas
+        if (equipa->numAtletas > 0) {
+            Atleta* novosAtletas = realloc(equipa->atletas, equipa->numAtletas * sizeof(Atleta));
+            if (novosAtletas == NULL) {
+                printf("\nERRO: Falha ao tentar diminuir a memória para os atletas!\n");
+            } else {
+                equipa->atletas = novosAtletas;
+            }
+        } else {
+            free(equipa->atletas);
+            equipa->atletas = NULL;
+        }
+
+        printf("\nAtleta '%s' removido com sucesso!\n", nomeAtleta);
+    } else {
+        printf("\nOperação de remoção cancelada.\n");
+    }
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
+}
+
+/**
+ * Remove todos os atletas de uma equipa.
+ */
+void removerTodosAtletas(Campeonato* campeonato) {
+    int numEquipa;
+    char confirmacao;
+
+    if (campeonato == NULL || campeonato->numEquipas == 0) {
+        printf("\nNenhuma equipa registada para remover atletas.\n");
+        return;
+    }
+
+    printf("\n--- Remover Todos os Atletas de uma Equipa ---\n");
+    for (int i = 0; i < campeonato->numEquipas; i++) {
+        printf("%d - %s\n", i + 1, campeonato->equipas[i].designacao);
+    }
+    printf("Escolha o número da equipa da qual deseja remover todos os atletas: ");
+    scanf("%d", &numEquipa);
+    limparBuffer();
+
+    if (numEquipa <= 0 || numEquipa > campeonato->numEquipas) {
+        printf("\nERRO: Número de equipa inválido!\n");
+        return;
+    }
+
+    Equipa* equipa = &campeonato->equipas[numEquipa - 1];
+
+    if (equipa->numAtletas == 0) {
+        printf("\nA equipa '%s' já não tem atletas.\n", equipa->designacao);
+        return;
+    }
+
+    printf("\nTem a certeza que quer remover todos os %d atletas da equipa '%s'? (S/N): ", equipa->numAtletas, equipa->designacao);
+    scanf("%c", &confirmacao);
+    limparBuffer();
+
+    if (confirmacao == 'S' || confirmacao == 's') {
+        free(equipa->atletas);
+        equipa->atletas = NULL;
+        equipa->numAtletas = 0;
+        printf("\nTodos os atletas da equipa '%s' foram removidos com sucesso!\n", equipa->designacao);
+    } else {
+        printf("\nOperação de remoção cancelada.\n");
+    }
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
+}
+
+/**
+ * Valida se um numId tem 7 dígitos e é único em todas as equipas do campeonato.
+ * Retorna 1 se válido, 0 se inválido.
+ */
+int validarNumId(Campeonato *camp, int numId) {
+    if (numId < 1000000 || numId > 9999999) return 0;
+
+    for (int i = 0; i < camp->numEquipas; i++) {
+        Equipa *eq = &camp->equipas[i];
+        for (int j = 0; j < eq->numAtletas; j++) {
+            if (eq->atletas[j].numIdentificacao == numId) return 0;
+        }
+    }
+    return 1;
+}
+
+/**
+ * Liberta toda a memória alocada para o campeonato e suas equipas.
+ */
+void libertarMemoria(Campeonato *camp) {
+    if (camp == NULL) return;
+
+    for (int i = 0; i < camp->numEquipas; i++) {
+        free(camp->equipas[i].atletas);
+    }
+    free(camp->equipas);
+    camp->equipas = NULL;
+    camp->numEquipas = 0;
+}
+
+/*
+* Apaga todos os dados do campeonato incluindo equipas e atletas
+*/
+void ApagarDados(Campeonato *camp) {
+    char confirmacao;
+
+    if (camp == NULL) {
+        return;
+    }
+
+    printf("\n--- Apagar Todo o Registo ---\n");
+    printf("Tem a certeza que quer apagar todo o registo do campeonato?\n");
+    printf("Esta ação é irreversível e irá limpar todos os dados de equipas e atletas.\n");
+    printf("Confirma? (S/N): ");
+    scanf("%c", &confirmacao);
+    limparBuffer();
+
+    if (confirmacao == 'S' || confirmacao == 's') {
+        if (camp->equipas != NULL) {
+            for (int i = 0; i < camp->numEquipas; i++) {
+                if (camp->equipas[i].atletas != NULL) {
+                    free(camp->equipas[i].atletas);
+                }
+            }
+            free(camp->equipas);
+        }
+        
+        camp->equipas = NULL;
+        camp->numEquipas = 0;
+        camp->capacidadeEquipas = 0;
+        strcpy(camp->nome, "");
+        camp->ano = 0;
+
+        printf("\nToda a memória foi libertada e os dados foram apagados com sucesso.\n");
+    } else {
+        printf("\nOperação de remoção cancelada.\n");
+    }
+
+    /*
+        Local para colocar a função que guarda os dados da aplicação
+    */
 }

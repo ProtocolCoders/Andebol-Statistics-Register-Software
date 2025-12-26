@@ -31,6 +31,7 @@ extern const int MAX_ATLETAS;
 extern const int MAX_NOME_ATLETA;
 extern const int MAX_DESIGNACAO;
 
+// core.c
 void adicionarEquipa(Campeonato *campeonato);
 
 void removerEquipa(Campeonato* campeonato);
@@ -47,15 +48,40 @@ void adicionarAtleta(Campeonato *campeonato);
 
 void imprimirDadosAtleta(Campeonato* campeonato, int numIdentificacao);
 
-/* Módulo de Estatísticas */
+void removerTodosAtletas(Equipa *equipa);
+
+int validarNumId(Campeonato *camp, int numId);
+
+void libertarMemoria(Campeonato *camp);
+
+void ApagarDados(Campeonato *camp);
+
+int removerAtleta (Equipa *equipa, int numId);
+
+// io.c
+void imprimirDadosAtleta(Campeonato* campeonato, int numIdentificacao);
+
+// stats.c
 float calcularValiaAtleta(Atleta *a);
+
 void atualizarTodasValias(Campeonato *camp);
+
 float calcularValiaEquipa(Equipa *e);
+
 void ordenarAtletasPorValia(Equipa *e, int desc);
+
 void ordenarAtletasPorNome(Equipa *e);
+
 void listarAtletasEquipaOrdenado(Equipa *e, int ordenarPorValiaDesc);
+
 void pesquisarAtletasPorValia(Campeonato *camp, float valor, int maior);
+
 void pesquisarAtletasPorAno(Campeonato *camp, int ano, int antes);
+
 Equipa* encontrarEquipaMaisValiosa(Campeonato *camp);
+
 Equipa* encontrarEquipaMenosValiosa(Campeonato *camp);
+
 void encontrarMelhorAtletaPorPosicao(Campeonato *camp);
+
+void pesquisarAtletasPorAnoExato(Campeonato *camp)
