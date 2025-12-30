@@ -6,6 +6,6 @@ ATLETA|<num_identificacao>|<nome>|<ano_nascimento>|<posicao>|<mPontos>|<mRemates
 Posicoes
 ponta - pon
 lateral - lat
-central - con
+central - cen
 pivô - piv
 guarda-redes - gua

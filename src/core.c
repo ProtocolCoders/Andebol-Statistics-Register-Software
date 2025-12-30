@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h> //Sleep
-#include <unistd.h> //sleep
+#ifdef _WIN32
+    #include <windows.h> //Sleep
+#else
+	#include <unistd.h> //sleep
+#endif
 #include "../include/andebol.h"
 
 const int MAX_ATLETAS = 15;
@@ -70,6 +73,13 @@ Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeE
         return NULL;
     }
     
+    for (int i = 0; i < capacidadeEquipas; i++) {
+        novoCampeonato->equipas[i].atletas = NULL;
+        novoCampeonato->equipas[i].numAtletas = 0;
+        novoCampeonato->equipas[i].capacidadeAtletas = 0;
+        novoCampeonato->equipas[i].designacao[0] = '\0';
+    }
+
     strcpy(novoCampeonato->nome, nome);
     novoCampeonato->ano = ano;
     novoCampeonato->numEquipas = numEquipas;
@@ -143,11 +153,10 @@ void adicionarEquipa(Campeonato *campeonato) {
 
     campeonato->numEquipas++;
 
-    /*
-        Local para colocar a função que salva os dados da equipa no ficheiro externo e os devidos tratamentos de erro da mesma
-    */
+    gravarDados(campeonato);
 
     printf("\nEquipa '%s' adicionada com sucesso!\n", campeonato->equipas[campeonato->numEquipas - 1].designacao);
+    menuMI(campeonato);
 }
 
 void removerEquipa(Campeonato* campeonato) {
@@ -206,9 +215,7 @@ void removerEquipa(Campeonato* campeonato) {
 
     printf("\nEquipa '%s' removida com sucesso!\n", designacao);
 
-    /*
-        Local para colocar a função que guarda os dados da aplicação
-    */
+    gravarDados(campeonato);
 }
 
 void adicionarAtleta(Campeonato *campeonato) {
@@ -309,11 +316,7 @@ void adicionarAtleta(Campeonato *campeonato) {
 	    sleep(3);
     #endif
 
-    /*
-        Local para a função que calcula a valia do jogador com base na sua posição
-
-        Ex: equipa->atletas[equipa->numAtletas].valia = calculaValiaAtleta(<parâmetros da função>)
-    */
+    equipa->atletas[equipa->numAtletas].valia = calcularValiaAtleta(&equipa->atletas[equipa->numAtletas]);
 
     Atleta* tempAtleta = alocaAtleta(numIdentificacao, nome, anoNascimento, posicao, equipa->atletas[equipa->numAtletas].mPontos, equipa->atletas[equipa->numAtletas].mRemates, equipa->atletas[equipa->numAtletas].mPerdas, equipa->atletas[equipa->numAtletas].mAssist, equipa->atletas[equipa->numAtletas].mFintas, equipa->atletas[equipa->numAtletas].tMinutos, equipa->atletas[equipa->numAtletas].valia);
 
@@ -328,9 +331,7 @@ void adicionarAtleta(Campeonato *campeonato) {
 
     equipa->numAtletas++;
 
-    /*
-        Local para colocar a função que salva os dados dos atletas na equipa correspondente no ficheiro externo e os devidos tratamentos de erro da mesma
-    */
+    gravarDados(campeonato);
 
     printf("\nAtleta '%s' adicionado com sucesso à equipa '%s'!\n", equipa->atletas[equipa->numAtletas - 1].nome, equipa->designacao);
 }
@@ -412,6 +413,8 @@ void atualizarAtleta(Campeonato* campeonato) {
             scanf("%d", &atleta->tMinutos);
             limparBuffer();
 
+            calcularValiaAtleta(atleta);
+
             break;
         case 1:
             printf("\nIntroduza o novo nome do atleta: ");
@@ -429,36 +432,57 @@ void atualizarAtleta(Campeonato* campeonato) {
             fgets(atleta->posicao, sizeof(atleta->posicao), stdin);
             atleta->posicao[strcspn(atleta->posicao, "\n")] = '\0';
             limparBuffer();
+
+            calcularValiaAtleta(atleta);
+
             break;
         case 4:
             printf("\nIntroduza a nova média de pontos do atleta: ");
             scanf("%f", &atleta->mPontos);
             limparBuffer();
+
+            calcularValiaAtleta(atleta);
+
             break;
         case 5:
             printf("\nIntroduza a nova média de remates do atleta: ");
             scanf("%f", &atleta->mRemates);
             limparBuffer();
+
+            calcularValiaAtleta(atleta);
+
             break;
         case 6:
             printf("\nIntroduza a nova média de perdas do atleta: ");
             scanf("%f", &atleta->mPerdas);
             limparBuffer();
+
+            calcularValiaAtleta(atleta);
+
             break;
         case 7:
             printf("\nIntroduza a nova média de assistências do atleta: ");
             scanf("%f", &atleta->mAssist);
             limparBuffer();
+
+            calcularValiaAtleta(atleta);
+            
             break;
         case 8:
             printf("\nIntroduza a nova média de fintas do atleta: ");
             scanf("%f", &atleta->mFintas);
             limparBuffer();
+
+            calcularValiaAtleta(atleta);
+
             break;
         case 9:
             printf("\nIntroduza o novo número de minutos jogados pelo atleta: ");
             scanf("%d", &atleta->tMinutos);
             limparBuffer();
+
+            calcularValiaAtleta(atleta);
+
             break;
         default:
             printf("\nERRO: Opção inválida!\n");
@@ -471,9 +495,7 @@ void atualizarAtleta(Campeonato* campeonato) {
     
     imprimirDadosAtleta(campeonato, id);
 
-    /*
-        Local para colocar a função que grava os dados do novo atleta no ficheiro de equipas
-    */
+    gravarDados(campeonato);
 }
 
 /**
@@ -546,9 +568,7 @@ void removerAtleta(Campeonato *campeonato) {
         printf("\nOperação de remoção cancelada.\n");
     }
 
-    /*
-        Local para colocar a função que guarda os dados da aplicação
-    */
+    gravarDados(campeonato);
 }
 
 /**
@@ -596,9 +616,7 @@ void removerTodosAtletas(Campeonato* campeonato) {
         printf("\nOperação de remoção cancelada.\n");
     }
 
-    /*
-        Local para colocar a função que guarda os dados da aplicação
-    */
+    gravarDados(campeonato);
 }
 
 /**
@@ -669,7 +687,5 @@ void ApagarDados(Campeonato *camp) {
         printf("\nOperação de remoção cancelada.\n");
     }
 
-    /*
-        Local para colocar a função que guarda os dados da aplicação
-    */
+    gravarDados(camp);
 }

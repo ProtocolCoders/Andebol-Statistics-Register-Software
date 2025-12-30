@@ -23,6 +23,7 @@ float calcularValiaAtleta(Atleta *a) {
     } else if (strcasecmp(a->posicao, "piv") == 0) {
         return 2.0f * a->mPontos + 1.0f * a->mRemates + 5.0f * a->mFintas - 2.0f * a->mPerdas;
     }
+    return 0.0f;
 }
 
 // Atualiza a valia de todos os atletas no campeonato
@@ -121,7 +122,7 @@ void pesquisarAtletasPorValia(Campeonato *camp, float valor, int maior) {
         for (int j = 0; j < e->numAtletas; j++) {
             Atleta *a = &e->atletas[j];
             if ((maior && a->valia > valor) || (!maior && a->valia < valor)) {
-                printf("[%s] %d | %s | %s | Valia: %.2f\n", e->designacao, a->numIdentificacao, a->nome, a->posicao, a->valia);
+                printf("Atleta encontrado: [%s] %d | %s | %s | Valia: %.2f\n", e->designacao, a->numIdentificacao, a->nome, a->posicao, a->valia);
             }
         }
     }

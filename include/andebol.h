@@ -46,9 +46,7 @@ Campeonato* alocaCampeonato(char* nome, int ano, int numEquipas, int capacidadeE
 
 void adicionarAtleta(Campeonato *campeonato);
 
-void imprimirDadosAtleta(Campeonato* campeonato, int numIdentificacao);
-
-void removerTodosAtletas(Equipa *equipa);
+void removerTodosAtletas(Campeonato* campeonato);
 
 int validarNumId(Campeonato *camp, int numId);
 
@@ -56,10 +54,34 @@ void libertarMemoria(Campeonato *camp);
 
 void ApagarDados(Campeonato *camp);
 
-int removerAtleta (Equipa *equipa, int numId);
+void removerAtleta(Campeonato *campeonato);
+
+Atleta* encontrarAtleta(Campeonato* campeonato, int numIdentificacao);
 
 // io.c
 void imprimirDadosAtleta(Campeonato* campeonato, int numIdentificacao);
+
+void configuracaoInicial(Campeonato* camp);
+
+void carregarDados(Campeonato* camp);
+
+void carregarEquipas(Campeonato* camp);
+
+void ler_ficheiro(Campeonato* camp);
+
+void menuMI(Campeonato* camp);
+
+void menuA(Campeonato* camp);
+
+void menuAB1(Campeonato* camp);
+
+void menuB(Campeonato* camp);
+
+void gravarDados(Campeonato* camp);
+
+void pesquisarPor(Campeonato* camp);
+
+void ordenarPor(Campeonato* camp);
 
 // stats.c
 float calcularValiaAtleta(Atleta *a);
@@ -84,4 +106,4 @@ Equipa* encontrarEquipaMenosValiosa(Campeonato *camp);
 
 void encontrarMelhorAtletaPorPosicao(Campeonato *camp);
 
-void pesquisarAtletasPorAnoExato(Campeonato *camp)
+void pesquisarAtletasPorAnoExato(Campeonato *camp);
